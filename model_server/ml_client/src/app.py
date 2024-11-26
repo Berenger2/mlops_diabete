@@ -28,7 +28,7 @@ app = FastAPI(
 def root():
     return RedirectResponse(url="/docs")
 
-#Get all experiences
+#get all experiences
 @app.get("/experiences", tags=["Mlflow"])
 async def get_current_time():
     experiments = client.search_experiments()
@@ -43,7 +43,7 @@ async def get_current_time():
 
     return JSONResponse(content=response)
 
-#Get all runs
+#get all runs
 @app.get("/runs", tags=["Mlflow"])
 async def get_runs():
     runs = client.search_runs(ViewType.ACTIVE_ONLY)
