@@ -58,30 +58,32 @@ export default memo(function Home() {
     //     alert("Form submitted! Check the console for the data.");
     // };
 
-    const formDatax = {
-        pregnancies: 2,
-        glucose: 120,
-        bloodPressure: 80,
-        skinThickness: 20,
-        insulin: 80,
-        bmi: 27.4,
-        diabetesPedigreeFunction: 0.5,
-        age: 30,
-      };
+    // const formDatax = {
+    //     pregnancies: 2,
+    //     glucose: 120,
+    //     bloodPressure: 80,
+    //     skinThickness: 20,
+    //     insulin: 80,
+    //     bmi: 27.4,
+    //     diabetesPedigreeFunction: 0.5,
+    //     age: 30,
+    //   };
       
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://127.0.0.1:5050/predict', formDatax, {
+            const response = await axios.post('http://127.0.0.1:5050/predict', formData, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
-
+            console.log('DATA :', formData);
             console.log('Réponse du backend :', response.data);
             alert(`Prédiction reçue : ${response.data.prediction}`);
         } catch (error) {
+            console.log('DATA :', formData);
+
             console.error('Erreur lors de la soumission :', error);
             alert('Une erreur est survenue lors de la soumission.');
         }
