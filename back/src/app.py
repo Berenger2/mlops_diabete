@@ -6,7 +6,6 @@ import numpy as np
 import joblib
 import os
 from dotenv import load_dotenv
-
 load_dotenv()
 
 app = FastAPI(
@@ -19,7 +18,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Remplacez par les origines autorisées
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
