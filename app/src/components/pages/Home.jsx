@@ -1,10 +1,14 @@
-import React, { memo, useState } from 'react';
-import InputField from '../partials/InputField';
-import axios from 'axios';
-
+import React, { memo, useState } from "react";
+import InputField from "../partials/InputField";
+import axios from "axios";
+import { predictServerUrl } from "../../api";
+import ResultCard from "../partials/ResultCard";
+import StepButtonGroup from "../partials/StepButtonGroup";
 
 export default memo(function Home() {
     const [currentStep, setCurrentStep] = useState(0);
+    const [prediction, setPrediction] = useState(null);
+    const [error, setError] = useState(null);
 
     const [formData, setFormData] = useState({
         pregnancies: "",
@@ -14,7 +18,7 @@ export default memo(function Home() {
         insulin: "",
         bmi: "",
         diabetesPedigreeFunction: "",
-        age: ""
+        age: "",
     });
 
     const steps = [
@@ -22,14 +26,14 @@ export default memo(function Home() {
             { name: "pregnancies", type: "text", placeholder: "Nombre de grossesses" },
             { name: "glucose", type: "text", placeholder: "Concentration de glucose" },
             { name: "bloodPressure", type: "text", placeholder: "Pression artérielle" },
-            { name: "skinThickness", type: "text", placeholder: "Épaisseur du pli cutané" }
+            { name: "skinThickness", type: "text", placeholder: "Épaisseur du pli cutané" },
         ],
         [
             { name: "insulin", type: "text", placeholder: "Niveau d'insuline sérique" },
             { name: "bmi", type: "text", placeholder: "Indice de masse corporelle" },
             { name: "diabetesPedigreeFunction", type: "text", placeholder: "Indice de prédisposition familiale" },
-            { name: "age", type: "text", placeholder: "Âge" }
-        ]
+            { name: "age", type: "text", placeholder: "Âge" },
+        ],
     ];
 
     const handleChange = (e) => {
@@ -39,7 +43,6 @@ export default memo(function Home() {
             [name]: value !== "" ? value : "",
         });
     };
-
 
     const handleNext = () => {
         if (currentStep < steps.length - 1) {
@@ -55,6 +58,7 @@ export default memo(function Home() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(null); 
         try {
             const queryParams = new URLSearchParams({
                 feature1: formData.pregnancies,
@@ -67,20 +71,19 @@ export default memo(function Home() {
                 feature8: formData.age,
             });
 
-            const response = await axios.post(`http://127.0.0.1:5050/predict?${queryParams.toString()}`, null, {
+            const response = await axios.post(`${predictServerUrl}/predict?${queryParams.toString()}`, null, {
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
             });
 
-            console.log('Réponse du backend :', response.data);
-            alert(`Prédiction reçue : ${response.data.prediction}`);
-        } catch (error) {
-            console.error('Erreur lors de la soumission :', error.response?.data || error.message);
-            alert('Une erreur est survenue lors de la soumission.');
+            setPrediction(response.data.prediction[0]);
+            setError(null);
+        } catch (err) {
+            setError("Une erreur est survenue lors de la soumission.");
+            setPrediction(null);
         }
     };
-
 
     return (
         <div>
@@ -99,9 +102,11 @@ export default memo(function Home() {
 
                                 <div className="tab-content">
                                     <div className="tab-pane fade show active" role="tabpanel">
-                                        <p className="mt-6 mb-6">Renseigner les données du patient en suivant les étapes successives.</p>
+                                        <p className="mt-6 mb-6">
+                                            Renseignez les données du patient en suivant les étapes successives.
+                                        </p>
                                         <form onSubmit={handleSubmit}>
-                                            {steps[currentStep].map((field, index) => (
+                                            {steps[currentStep].map((field) => (
                                                 <InputField
                                                     key={`${currentStep}-${field.name}`}
                                                     name={field.name}
@@ -112,41 +117,15 @@ export default memo(function Home() {
                                                 />
                                             ))}
 
-                                            <div className="row mt-4">
-                                                {currentStep > 0 && (
-                                                    <div className="col-6">
-                                                        <button
-                                                            type="button"
-                                                            className="btn btn-secondary btn-block"
-                                                            onClick={handlePrevious}
-                                                        >
-                                                            Précédent
-                                                        </button>
-                                                    </div>
-                                                )}
-                                                {currentStep < steps.length - 1 && (
-                                                    <div className="col-6">
-                                                        <button
-                                                            type="button"
-                                                            className="btn btn-primary btn-block"
-                                                            onClick={handleNext}
-                                                        >
-                                                            Suivant
-                                                        </button>
-                                                    </div>
-                                                )}
-                                                {currentStep === steps.length - 1 && (
-                                                    <div className="col-6">
-                                                        <button
-                                                            type="submit"
-                                                            className="btn btn-success btn-block"
-                                                        >
-                                                            Valider
-                                                        </button>
-                                                    </div>
-                                                )}
-                                            </div>
+                                            <StepButtonGroup
+                                                currentStep={currentStep}
+                                                totalSteps={steps.length}
+                                                onPrevious={handlePrevious}
+                                                onNext={handleNext}
+                                            />
                                         </form>
+
+                                        <ResultCard prediction={prediction} error={error} />
                                     </div>
                                 </div>
                             </div>
