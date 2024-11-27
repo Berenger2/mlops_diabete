@@ -10,11 +10,19 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = FastAPI(
-    title="Backend || Diabetes prediction plateform ",
-    description="This is a simple FastAPI application for Diabetes prediction plateform ",
+    title="Backend || Diabetes prediction plateform",
+    description="This is a simple FastAPI application for Diabetes prediction plateform",
     version="0.1",
     docs_url="/docs",
     redoc_url=None
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], 
+    allow_credentials=True,  
+    allow_methods=["*"],  
+    allow_headers=["*"],  
 )
 
 @app.get("/", include_in_schema=False)
