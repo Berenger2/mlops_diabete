@@ -6,30 +6,8 @@ import numpy as np
 import joblib
 import os
 from dotenv import load_dotenv
-
 load_dotenv()
 
-app = FastAPI(
-    title="Backend || Diabetes prediction plateform",
-    description="This is a simple FastAPI application for Diabetes prediction plateform",
-    version="0.1",
-    docs_url="/docs",
-    redoc_url=None
-)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"], 
-    allow_credentials=True,  
-    allow_methods=["*"],  
-    allow_headers=["*"],  
-)
-
-@app.get("/", include_in_schema=False)
-def root():
-    return RedirectResponse(url="/docs")
-
-ML_CLIENT_URL = os.getenv("ML_CLIENT_URL")
 app = FastAPI(
     title="Backend || Diabetes Prediction Platform",
     description="This is a simple FastAPI application for Diabetes prediction platform",
@@ -38,11 +16,21 @@ app = FastAPI(
     redoc_url=None
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 @app.get("/", include_in_schema=False)
 def root():
     return RedirectResponse(url="/docs")
 
-@app.get("/predict")
+ML_CLIENT_URL = os.getenv("ML_CLIENT_URL")
+
+@app.post("/predict")
 def predict(
     feature1: float = Query(..., description="Pregnancies"),
     feature2: float = Query(..., description="Glucose"),
@@ -54,7 +42,7 @@ def predict(
     feature8: float = Query(..., description="Age")
 ):
     try:
-        #production
+        # Production
         response = requests.get(ML_CLIENT_URL)
         if response.status_code != 200:
             raise HTTPException(status_code=500, detail="Impossible de récupérer le modèle en production.")
@@ -72,18 +60,18 @@ def predict(
         
         model = joblib.load(model_path)
 
-        #parametres
+        # Paramètres
         expected_features = model.n_features_in_
-        input_array = np.array([feature1, feature2, feature3, feature4,feature5,feature6,feature7,feature8])
+        input_array = np.array([feature1, feature2, feature3, feature4, feature5, feature6, feature7, feature8])
 
-        #missing columns
+        # Missing columns
         if input_array.shape[0] < expected_features:
             missing_features = expected_features - input_array.shape[0]
-            input_array = np.append(input_array, [0] * missing_features)  
+            input_array = np.append(input_array, [0] * missing_features)
         
         input_array = input_array.reshape(1, -1)
 
-        #prediction
+        # Prediction
         prediction = model.predict(input_array)
 
         return {

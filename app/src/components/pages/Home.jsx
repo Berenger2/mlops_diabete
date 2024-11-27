@@ -36,9 +36,10 @@ export default memo(function Home() {
         const { name, value } = e.target;
         setFormData({
             ...formData,
-            [name]: value
+            [name]: value !== "" ? value : "",
         });
     };
+
 
     const handleNext = () => {
         if (currentStep < steps.length - 1) {
@@ -52,28 +53,21 @@ export default memo(function Home() {
         }
     };
 
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     console.log("Form submitted:", formData);
-    //     alert("Form submitted! Check the console for the data.");
-    // };
-
-    const formDatax = {
-        pregnancies: 2,
-        glucose: 120,
-        bloodPressure: 80,
-        skinThickness: 20,
-        insulin: 80,
-        bmi: 27.4,
-        diabetesPedigreeFunction: 0.5,
-        age: 30,
-      };
-      
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://127.0.0.1:5050/predict', formDatax, {
+            const queryParams = new URLSearchParams({
+                feature1: formData.pregnancies,
+                feature2: formData.glucose,
+                feature3: formData.bloodPressure,
+                feature4: formData.skinThickness,
+                feature5: formData.insulin,
+                feature6: formData.bmi,
+                feature7: formData.diabetesPedigreeFunction,
+                feature8: formData.age,
+            });
+
+            const response = await axios.post(`http://127.0.0.1:5050/predict?${queryParams.toString()}`, null, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -82,10 +76,11 @@ export default memo(function Home() {
             console.log('Réponse du backend :', response.data);
             alert(`Prédiction reçue : ${response.data.prediction}`);
         } catch (error) {
-            console.error('Erreur lors de la soumission :', error);
+            console.error('Erreur lors de la soumission :', error.response?.data || error.message);
             alert('Une erreur est survenue lors de la soumission.');
         }
     };
+
 
     return (
         <div>
