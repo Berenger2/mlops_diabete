@@ -1,5 +1,7 @@
 import React, { memo, useState } from 'react';
 import InputField from '../partials/InputField';
+import axios from 'axios';
+
 
 export default memo(function Home() {
     const [currentStep, setCurrentStep] = useState(0);
@@ -50,10 +52,39 @@ export default memo(function Home() {
         }
     };
 
-    const handleSubmit = (e) => {
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     console.log("Form submitted:", formData);
+    //     alert("Form submitted! Check the console for the data.");
+    // };
+
+    const formDatax = {
+        pregnancies: 2,
+        glucose: 120,
+        bloodPressure: 80,
+        skinThickness: 20,
+        insulin: 80,
+        bmi: 27.4,
+        diabetesPedigreeFunction: 0.5,
+        age: 30,
+      };
+      
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("Form submitted:", formData);
-        alert("Form submitted! Check the console for the data.");
+        try {
+            const response = await axios.post('http://127.0.0.1:5050/predict', formDatax, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            console.log('Réponse du backend :', response.data);
+            alert(`Prédiction reçue : ${response.data.prediction}`);
+        } catch (error) {
+            console.error('Erreur lors de la soumission :', error);
+            alert('Une erreur est survenue lors de la soumission.');
+        }
     };
 
     return (
@@ -77,7 +108,7 @@ export default memo(function Home() {
                                         <form onSubmit={handleSubmit}>
                                             {steps[currentStep].map((field, index) => (
                                                 <InputField
-                                                    key={`${currentStep}-${field.name}`} 
+                                                    key={`${currentStep}-${field.name}`}
                                                     name={field.name}
                                                     type={field.type}
                                                     placeholder={field.placeholder}
