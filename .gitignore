@@ -4,3 +4,5 @@ mlartifacts/
 outputs/
 .env
 diab/
+aws/
+awscliv2.zip
