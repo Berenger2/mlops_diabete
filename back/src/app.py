@@ -6,6 +6,9 @@ import numpy as np
 import joblib
 import os
 from dotenv import load_dotenv
+from src.logger import get_logger
+from src.s3_utils import download_from_s3
+
 load_dotenv()
 
 app = FastAPI(
@@ -24,11 +27,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+ML_CLIENT_URL = os.getenv("ML_CLIENT_URL")
+logger = get_logger(__name__)
+
 @app.get("/", include_in_schema=False)
 def root():
     return RedirectResponse(url="/docs")
-
-ML_CLIENT_URL = os.getenv("ML_CLIENT_URL")
 
 @app.post("/predict")
 def predict(
@@ -46,24 +50,31 @@ def predict(
         response = requests.get(ML_CLIENT_URL)
         if response.status_code != 200:
             raise HTTPException(status_code=500, detail="Impossible de récupérer le modèle en production.")
-        
+      
         models_in_production = response.json()
         if not models_in_production:
             raise HTTPException(status_code=404, detail="Aucun modèle en production trouvé.")
         
         model_info = models_in_production[0]
         artifact_uri = model_info.get("artifact_uri")
-        model_path = os.path.join(artifact_uri, "model.pkl")
         
-        if not os.path.exists(model_path):
-            raise HTTPException(status_code=404, detail=f"Le fichier du modèle est introuvable : {model_path}")
+        # print(artifact_uri)
+        if not artifact_uri:
+            raise HTTPException(status_code=500, detail="URI de l'artefact introuvable dans les données du modèle.")
         
-        model = joblib.load(model_path)
-
-        # Paramètres
+        # Model uri
+        artifact_model_uri = os.path.join(artifact_uri, "model.pkl")
+        local_model_path = "/tmp/model.pkl"
+        
+        # print(artifact_model_uri)
+        
+        # Telechargement
+        download_from_s3(artifact_model_uri, local_model_path)
+        model = joblib.load(local_model_path)
+        
         expected_features = model.n_features_in_
         input_array = np.array([feature1, feature2, feature3, feature4, feature5, feature6, feature7, feature8])
-
+        
         # Missing columns
         if input_array.shape[0] < expected_features:
             missing_features = expected_features - input_array.shape[0]
@@ -79,6 +90,6 @@ def predict(
             "model_name": model_info["model_name"],
             "model_version": model_info["version"],
         }
-
     except Exception as e:
+        logger.error(f"Erreur lors de la prédiction : {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Erreur lors de la prédiction : {str(e)}")
