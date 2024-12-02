@@ -4,5 +4,7 @@ mlartifacts/
 outputs/
 .env
 diab/
+diabcl/
 aws/
 awscliv2.zip
+__pycache__/
