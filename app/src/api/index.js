@@ -1,1 +1,1 @@
-export const predictServerUrl = 'http://127.0.0.1:5050';
+export const predictServerUrl = 'https://mldiabeteback-e6cnahdve0aghhca.canadacentral-01.azurewebsites.net';
