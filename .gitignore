@@ -5,6 +5,7 @@ outputs/
 .env
 diab/
 diabcl/
+venv/
 aws/
 awscliv2.zip
 mlflow-gcp.json
