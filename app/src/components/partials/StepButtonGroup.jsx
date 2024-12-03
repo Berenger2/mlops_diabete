@@ -5,6 +5,7 @@ export default function StepButtonGroup({
   totalSteps,
   onPrevious,
   onNext,
+  disabled,
   onSubmit,
 }) {
   return (
@@ -15,6 +16,7 @@ export default function StepButtonGroup({
             type="button"
             className="btn btn-secondary btn-block"
             onClick={onPrevious}
+            disabled={disabled} 
           >
             Précédent
           </button>
@@ -26,6 +28,7 @@ export default function StepButtonGroup({
             type="button"
             className="btn btn-primary btn-block"
             onClick={onNext}
+            disabled={disabled} 
           >
             Suivant
           </button>
@@ -33,7 +36,7 @@ export default function StepButtonGroup({
       )}
       {currentStep === totalSteps - 1 && (
         <div className="col-6">
-          <button type="submit" className="btn btn-success btn-block">
+          <button type="submit" className="btn btn-success btn-block" disabled={disabled} >
             Valider
           </button>
         </div>
