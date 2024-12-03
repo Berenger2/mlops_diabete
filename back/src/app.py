@@ -7,7 +7,8 @@ import joblib
 import os
 from dotenv import load_dotenv
 from src.logger import get_logger
-from src.s3_utils import download_from_s3
+# from src.s3_utils import download_from_s3
+from src.gcs_utils import download_from_gcs
 
 load_dotenv()
 
@@ -63,13 +64,15 @@ def predict(
             raise HTTPException(status_code=500, detail="URI de l'artefact introuvable dans les données du modèle.")
         
         # Model uri
-        artifact_model_uri = os.path.join(artifact_uri, "model.pkl")
+        # artifact_model_uri = os.path.join(artifact_uri, "model.pkl")
+        artifact_model_uri = os.path.join(artifact_uri, "model.pkl").replace("\\", "/")
         local_model_path = "/tmp/model.pkl"
         
         # print(artifact_model_uri)
         
         # Telechargement
-        download_from_s3(artifact_model_uri, local_model_path)
+        # download_from_s3(artifact_model_uri, local_model_path)
+        download_from_gcs(artifact_model_uri, local_model_path)
         model = joblib.load(local_model_path)
         
         expected_features = model.n_features_in_
