@@ -1,0 +1,7 @@
+mlflow
+hyperopt
+fastparquet
+fastapi
+uvicorn
+python-dotenv
+psycopg2
