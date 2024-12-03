@@ -4,3 +4,8 @@ mlartifacts/
 outputs/
 .env
 diab/
+aws/
+awscliv2.zip
+mlflow-gcp.json
+__pycache__/
+.ipynb_checkpoints/
