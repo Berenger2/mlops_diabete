@@ -4,11 +4,13 @@ import axios from "axios";
 import { predictServerUrl } from "../../api";
 import ResultCard from "../partials/ResultCard";
 import StepButtonGroup from "../partials/StepButtonGroup";
+import Loader from "../partials/Loader";
 
 export default memo(function Home() {
     const [currentStep, setCurrentStep] = useState(0);
     const [prediction, setPrediction] = useState(null);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const [formData, setFormData] = useState({
         pregnancies: "",
@@ -58,7 +60,8 @@ export default memo(function Home() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(null); 
+        setError(null);
+        setLoading(true); 
         try {
             const queryParams = new URLSearchParams({
                 feature1: formData.pregnancies,
@@ -82,6 +85,8 @@ export default memo(function Home() {
         } catch (err) {
             setError("Une erreur est survenue lors de la soumission.");
             setPrediction(null);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -94,7 +99,7 @@ export default memo(function Home() {
                             <div className="forny-form">
                                 <ul className="nav nav-tabs" role="tablist">
                                     <li className="nav-item">
-                                        <a className="nav-link active bg-transparent">
+                                        <a className="nav-link active bg-transparent" >
                                             <span>Prédiction du diabète</span>
                                         </a>
                                     </li>
@@ -114,6 +119,7 @@ export default memo(function Home() {
                                                     placeholder={field.placeholder}
                                                     value={formData[field.name]}
                                                     onChange={handleChange}
+                                                    disabled={loading}
                                                 />
                                             ))}
 
@@ -122,10 +128,11 @@ export default memo(function Home() {
                                                 totalSteps={steps.length}
                                                 onPrevious={handlePrevious}
                                                 onNext={handleNext}
+                                                disabled={loading}
                                             />
                                         </form>
-
-                                        <ResultCard prediction={prediction} error={error} />
+                                        {loading && <Loader />}
+                                        {!loading &&<ResultCard prediction={prediction} error={error} />}
                                     </div>
                                 </div>
                             </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const InputField = ({ name, type, placeholder, value, onChange }) => (
+const InputField = ({ name, type, placeholder, value, onChange,disabled }) => (
     <div className="form-group">
         <input
             name={name}
@@ -9,6 +9,8 @@ const InputField = ({ name, type, placeholder, value, onChange }) => (
             value={value}
             onChange={onChange}
             className="form-control"
+            disabled={disabled} 
+
         />
     </div>
 );
