@@ -1,0 +1,93 @@
+[
+    {
+        "id": 1,
+        "name": "John Doe",
+        "gender": "male",
+        "pregnancies": 0,
+        "glucose": 120,
+        "bloodPressure": 70,
+        "skinThickness": 22,
+        "insulin": 85,
+        "bmi": 27.0,
+        "diabetesPedigreeFunction": 0.6,
+        "age": 45
+    },
+    {
+        "id": 2,
+        "name": "Jane Smith",
+        "gender": "female",
+        "pregnancies": 2,
+        "glucose": 130,
+        "bloodPressure": 75,
+        "skinThickness": 25,
+        "insulin": 90,
+        "bmi": 30.0,
+        "diabetesPedigreeFunction": 0.5,
+        "age": 38
+    },
+    {
+        "id": 3,
+        "name": "Michael Brown",
+        "gender": "male",
+        "pregnancies": 0,
+        "glucose": 150,
+        "bloodPressure": 80,
+        "skinThickness": 30,
+        "insulin": 100,
+        "bmi": 32.0,
+        "diabetesPedigreeFunction": 0.7,
+        "age": 50
+    },
+    {
+        "id": 4,
+        "name": "Emily Davis",
+        "gender": "female",
+        "pregnancies": 1,
+        "glucose": 110,
+        "bloodPressure": 65,
+        "skinThickness": 20,
+        "insulin": 80,
+        "bmi": 23.5,
+        "diabetesPedigreeFunction": 0.3,
+        "age": 40
+    },
+    {
+        "id": 5,
+        "name": "Sarah Johnson",
+        "gender": "female",
+        "pregnancies": 4,
+        "glucose": 140,
+        "bloodPressure": 72,
+        "skinThickness": 28,
+        "insulin": 95,
+        "bmi": 29.0,
+        "diabetesPedigreeFunction": 0.6,
+        "age": 44
+    },
+    {
+        "id": 6,
+        "name": "William Taylor",
+        "gender": "male",
+        "pregnancies": 0,
+        "glucose": 125,
+        "bloodPressure": 70,
+        "skinThickness": 24,
+        "insulin": 88,
+        "bmi": 26.0,
+        "diabetesPedigreeFunction": 0.4,
+        "age": 47
+    },
+    {
+        "id": 7,
+        "name": "Olivia White",
+        "gender": "female",
+        "pregnancies": 2,
+        "glucose": 115,
+        "bloodPressure": 68,
+        "skinThickness": 21,
+        "insulin": 82,
+        "bmi": 24.5,
+        "diabetesPedigreeFunction": 0.3,
+        "age": 35
+    }
+]
