@@ -5,6 +5,7 @@ import { predictServerUrl } from "../../api";
 import ResultCard from "../partials/ResultCard";
 import StepButtonGroup from "../partials/StepButtonGroup";
 import Loader from "../partials/Loader";
+import { Link } from "react-router-dom";
 
 export default memo(function Home() {
     const [currentStep, setCurrentStep] = useState(0);
@@ -61,7 +62,7 @@ export default memo(function Home() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
-        setLoading(true); 
+        setLoading(true);
         try {
             const queryParams = new URLSearchParams({
                 feature1: formData.pregnancies,
@@ -99,9 +100,9 @@ export default memo(function Home() {
                             <div className="forny-form">
                                 <ul className="nav nav-tabs" role="tablist">
                                     <li className="nav-item">
-                                        <a className="nav-link active bg-transparent" >
+                                        <Link className="nav-link active bg-transparent" to="">
                                             <span>Prédiction du diabète</span>
-                                        </a>
+                                        </Link>
                                     </li>
                                 </ul>
 
@@ -132,7 +133,7 @@ export default memo(function Home() {
                                             />
                                         </form>
                                         {loading && <Loader />}
-                                        {!loading &&<ResultCard prediction={prediction} error={error} />}
+                                        {!loading && <ResultCard prediction={prediction} error={error} />}
                                     </div>
                                 </div>
                             </div>
