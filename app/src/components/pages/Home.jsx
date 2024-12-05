@@ -6,6 +6,7 @@ import ResultCard from "../partials/ResultCard";
 import StepButtonGroup from "../partials/StepButtonGroup";
 import Loader from "../partials/Loader";
 import { Link } from "react-router-dom";
+import CrmUrl from "../partials/CrmUrl";
 
 export default memo(function Home() {
     const [currentStep, setCurrentStep] = useState(0);
@@ -131,6 +132,7 @@ export default memo(function Home() {
                                                 onNext={handleNext}
                                                 disabled={loading}
                                             />
+                                            <CrmUrl/>
                                         </form>
                                         {loading && <Loader />}
                                         {!loading && <ResultCard prediction={prediction} error={error} />}
