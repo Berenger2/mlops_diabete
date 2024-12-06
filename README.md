@@ -36,6 +36,11 @@ Voici un aperçu des composants du projet :
 - **SDK** : Hébergé sur Cloudflare.
 - **CRM simplifié** : Déployé sur Netlify.
 ---
+## **Architecture Globale**
+Voici une représentation visuelle de l'architecture globale du projet :
+
+![Architecture Globale](docs/architecture.png)
+---
 ## **Installation et Déploiement**
 1. Clonez le dépôt :
    ```bash
