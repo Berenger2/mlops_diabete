@@ -39,18 +39,31 @@
                 feature8: data.age,
             });
 
-            const response = await fetch(`${this.apiUrl}/predict?${queryParams.toString()}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-            });
+            try {
+                const response = await fetch(`${this.apiUrl}/predict?${queryParams.toString()}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                });
 
-            if (!response.ok) {
-                const errorDetails = await response.json();
-                throw new Error(`Erreur API : ${JSON.stringify(errorDetails)}`);
+                // check response
+                if (!response.ok) {
+                    const errorDetails = await response.json();
+                    throw new Error(`Erreur API : ${JSON.stringify(errorDetails)}`);
+                }
+
+                // response
+                return await response.json();
+
+            } catch (error) {
+                // backend is down
+                if (error.name === "TypeError" || error.message.includes("Failed to fetch")) {
+                    throw new Error(
+                        "L'instance backend est éteinte. Contactez l'administrateur à brgakodo@gmail.com."
+                    );
+                }
+                throw error;
             }
-
-            return await response.json();
-        }
+        },
     };
     global.DiabetesSDK = DiabetesSDK;
 })(window);

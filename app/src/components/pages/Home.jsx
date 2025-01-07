@@ -85,7 +85,13 @@ export default memo(function Home() {
             setPrediction(response.data.prediction[0]);
             setError(null);
         } catch (err) {
-            setError("Une erreur est survenue lors de la soumission.");
+            if (err.response) {
+                setError("Une erreur est survenue lors de la soumission.");
+            } else if (err.request) {
+                setError("L'instance backend est éteinte.");
+            } else {
+                setError("Une erreur inattendue s'est produite.");
+            }
             setPrediction(null);
         } finally {
             setLoading(false);
