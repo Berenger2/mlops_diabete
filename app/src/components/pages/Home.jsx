@@ -5,6 +5,8 @@ import { predictServerUrl } from "../../api";
 import ResultCard from "../partials/ResultCard";
 import StepButtonGroup from "../partials/StepButtonGroup";
 import Loader from "../partials/Loader";
+import { Link } from "react-router-dom";
+import CrmUrl from "../partials/CrmUrl";
 
 export default memo(function Home() {
     const [currentStep, setCurrentStep] = useState(0);
@@ -61,7 +63,7 @@ export default memo(function Home() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(null);
-        setLoading(true); 
+        setLoading(true);
         try {
             const queryParams = new URLSearchParams({
                 feature1: formData.pregnancies,
@@ -83,7 +85,13 @@ export default memo(function Home() {
             setPrediction(response.data.prediction[0]);
             setError(null);
         } catch (err) {
-            setError("Une erreur est survenue lors de la soumission.");
+            if (err.response) {
+                setError("Une erreur est survenue lors de la soumission.");
+            } else if (err.request) {
+                setError("L'instance backend est éteinte.");
+            } else {
+                setError("Une erreur inattendue s'est produite.");
+            }
             setPrediction(null);
         } finally {
             setLoading(false);
@@ -99,9 +107,9 @@ export default memo(function Home() {
                             <div className="forny-form">
                                 <ul className="nav nav-tabs" role="tablist">
                                     <li className="nav-item">
-                                        <a className="nav-link active bg-transparent" >
+                                        <Link className="nav-link active bg-transparent" to="">
                                             <span>Prédiction du diabète</span>
-                                        </a>
+                                        </Link>
                                     </li>
                                 </ul>
 
@@ -130,9 +138,10 @@ export default memo(function Home() {
                                                 onNext={handleNext}
                                                 disabled={loading}
                                             />
+                                            <CrmUrl/>
                                         </form>
                                         {loading && <Loader />}
-                                        {!loading &&<ResultCard prediction={prediction} error={error} />}
+                                        {!loading && <ResultCard prediction={prediction} error={error} />}
                                     </div>
                                 </div>
                             </div>
